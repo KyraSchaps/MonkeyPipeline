@@ -253,7 +253,9 @@ end
 
 sum(Actualchoices)
 z(:,Hrate)=MSFitting(FullLLRs(Actualchoices),ChooseT1(Actualchoices,j));
-      
+        else
+          z(:,Hrate)=[nan;nan;nan];
+end
       end
 
       
@@ -281,9 +283,7 @@ z(:,Hrate)=MSFitting(FullLLRs(Actualchoices),ChooseT1(Actualchoices,j));
 % xlabel('H');
 % % title({ ['Model H=', num2str(z(1,Session,Hrate))]}) %['Actual H=', num2str(H), ' NoiseChoice = ' num2str(NoiseProb), ' lapse= ' num2str(lapse)],
 % j=j+1;
-      else
-          z(:,Hrate)=[nan;nan;nan];
-end
+    
 end
              figure(figgy)%(2*(Session-1)+1)
              if Hrate==2

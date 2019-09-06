@@ -88,35 +88,42 @@ end
                          subplot(1,3,period)
                          % x3= stretch factor, x2=mu, x1=kappa
                           Baseline=nanmean(Baselist); %This should eventually be calculated, but need to ask about ITI spikes first, for now is Baseline
-                             yfitM=@(x) x(3)*(exp(x(1)*cos(Evidences*pi/180-x(2))))./(2*pi*besseli(0,x(1)))+Baseline;    
-                             VonFitM = @(x)nansum((Mfr(:,Sess)-yfitM(x)).^2);
-                            % options = optimoptions('fmincon','Display','iter','Algorithm','sqp');
-%                              x(Sess,:)=fmincon(VonFitM,[sigma2kappa(15),pi/180*45,10],[],[],[],[],[0,0,0],[100,2*(pi),30]);
-                          
-                              yfit=@(x) x(3)*(exp(x(1)*cos(Dirlist*pi/180-x(2))))./(2*pi*besseli(0,x(1)))+Baseline;    
-                           VonFit = @(x)nansum((FRlist-yfit(x)).^2);
-                              y(period,:)=fmincon(VonFit,[sigma2kappa(15),pi/180*45,10,10],[],[],[],[],[1,0,0,0],[30,2*(pi),50,50]);
+%                              yfitM=@(x) x(3)*(exp(x(1)*cos(Evidences*pi/180-x(2))))./(2*pi*besseli(0,x(1)))+Baseline;    
+%                              VonFitM = @(x)nansum((Mfr(:,Sess)-yfitM(x)).^2);
+%                             % options = optimoptions('fmincon','Display','iter','Algorithm','sqp');
+% %                              x(Sess,:)=fmincon(VonFitM,[sigma2kappa(15),pi/180*45,10],[],[],[],[],[0,0,0],[100,2*(pi),30]);
+%                           
+%                               yfit=@(x) x(3)*(exp(x(1)*cos(Dirlist*pi/180-x(2))))./(2*pi*besseli(0,x(1)))+Baseline;    
+%                            VonFit = @(x)nansum((FRlist-yfit(x)).^2);
+%                               y(period,:)=fmincon(VonFit,[sigma2kappa(15),pi/180*45,10,10],[],[],[],[],[1,0,0,0],[30,2*(pi),50,50]);
                          polar(Evidences*pi/180,Mfr(:,Sess));  
                          hold on
                         %  polar(Evidences*pi/180,yfitM(x(Sess,:)));
                          title(titly);
                 
-% test=VMFitting(Evidences,Mfr(:,Sess),Baseline);
+ test(period,:)=VMFitting(Evidences,Mfr(:,Sess),Baseline);
                          Extend=[0:15:360];
 
                          VMFit=@(x) x(3)*(exp(x(1)*cos(Extend*pi/180-x(2))))./(2*pi*besseli(0,x(1)))+Baseline;
-                          polar(Extend*pi/180,VMFit(y(period,:)))
+%                           polar(Extend*pi/180,VMFit(y(period,:)))
+                          polar(Extend*pi/180,VMFit(test(period,:)))
                           %polar(Extend*pi/180,VMFit(x(Sess,:)))
 %             x(Sess,2)=mod(x(Sess,2)/pi*180, 360);
 %             x(Sess,1)=kappa2sigma(x(Sess,1));
             
-        y(period,2)=mod(y(period,2)/pi*180, 360);
-            y(period,1)=kappa2sigma(y(period,1));
-            y(period,4)=Baseline;
+%         y(period,2)=mod(y(period,2)/pi*180, 360);
+%             y(period,1)=kappa2sigma(y(period,1));
+%             y(period,4)=Baseline;
+            
+                    test(period,2)=mod(test(period,2)/pi*180, 360);
+            test(period,1)=kappa2sigma(test(period,1));
+          
+            
             
              end
 end
 end
+y=test;
 y=num2cell(y);
  
  y=cell2table(y,'VariableNames',{'STD','Mean','Height','Baseline'},'RowNames',{'Visual', 'Memory','Motor'});

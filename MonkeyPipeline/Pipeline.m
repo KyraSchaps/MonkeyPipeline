@@ -17,15 +17,16 @@ mkdir(b)
 
 
 MemTrials=KAS_Parser_794_DelayNeural(ResponseCutoff,1,data,theFile);
+numneuro=unique(MemTrials.Num_Neuron);
+
+totalFigs=1+5*numneuro;
+
 TaskTrials=KAS_Parser_794_DelayNeural(ResponseCutoff,2,data,theFile);% KAS_Parser_794_recoded(ResponseCutoff);
   cd(b)
   [Fits,TrialNum]=FindHRateQuant(TaskTrials,1+totalFigs*(currentFile-1));
     saveas(gcf,[b,'_PsychCurve.pdf'])
    
    
-numneuro=unique(MemTrials.Num_Neuron);
-
-totalFigs=1+5*numneuro;
 
  MonkeySpikeAnalysisTotal(TaskTrials,2+totalFigs*(currentFile-1),b);
   

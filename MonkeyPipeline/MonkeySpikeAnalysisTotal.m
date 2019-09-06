@@ -108,7 +108,7 @@ for H=1:2;
               fr{Ev,H}=[fr{Ev,H};spks/(datahold.FPOff(TOI(trials))-datahold.SampleOff(TOI(trials)))];
               allFR{A}=[allFR{A};spks/(datahold.FPOff(TOI(trials))-datahold.SampleOff(TOI(trials)))];
               end
-              if ~isempty(TOI)
+%               if ~isempty(TOI)
                                 ylabel('Trial');
           xlabel('time(ms)');
           Wantpsth=1;
@@ -120,7 +120,11 @@ for H=1:2;
                MNSpkCnt=nanmean(PSTH{Ev,H},1)/200*1000;
                baseline=0; %nanmean(MNSpkCnt(1:4));
                hold on
+               if ~isempty(MNSpkCnt)
                liner(A)=plot(bins(2:end-1),MNSpkCnt-baseline, col{A});
+               else
+                  liner(A)=plot(0,0, col{A}); 
+               end
          
              title({['Evidence= ', num2str(Evidences(Ev))]; ['H=  ',num2str(Hs(H))];['Neuron ' num2str(neuro)]});
 if H==1 && 2*Ev-(2-H)==1
@@ -132,7 +136,7 @@ end
 if A==2
 plot([1532,1532],[-1,20],'--k');
 end
-          end
+%           end
               end  
           end
           ylabel('Avg FR');
