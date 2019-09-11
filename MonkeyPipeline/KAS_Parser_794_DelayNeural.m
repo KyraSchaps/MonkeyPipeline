@@ -87,23 +87,8 @@ for currentFile = 1:nfiles
    UnbrokenTrials = data.ecodes.data(:,41)>=-1 & task ;%& ~isnan(Choice);
    UnbrokenTrials_Index=find(UnbrokenTrials~=0);
    
-   %Hazar Rate and Noise:
-   Haz=data.ecodes.data(UnbrokenTrials, 32);
-   Noise=data.ecodes.data(UnbrokenTrials, 33);
    
-   
-   %LLR for T1
-   
-      T1=max([normpdf(data.ecodes.data(UnbrokenTrials,38),data.ecodes.data(UnbrokenTrials,36),Noise)';normpdf(data.ecodes.data(UnbrokenTrials,38)+360,data.ecodes.data(UnbrokenTrials,36),Noise)';normpdf(data.ecodes.data(UnbrokenTrials,38)-360,data.ecodes.data(UnbrokenTrials,36),Noise)']); 
-      T2=max([normpdf(data.ecodes.data(UnbrokenTrials,38),data.ecodes.data(UnbrokenTrials,37),Noise)';normpdf(data.ecodes.data(UnbrokenTrials,38)+360,data.ecodes.data(UnbrokenTrials,37),Noise)';normpdf(data.ecodes.data(UnbrokenTrials,38)-360,data.ecodes.data(UnbrokenTrials,37),Noise)']); 
-
-   
-   LLR=log(T1'./T2');
-   
-   %Were the choices visbible?
-   Choice_Vis=~isnan(data.ecodes.data(UnbrokenTrials,8)) & (data.ecodes.data(UnbrokenTrials,8))<(data.ecodes.data(UnbrokenTrials,9));
-   
-   %Which target was picked?
+      %Which target was picked?
 %    Choice=nans(size(data.ecodes.data(:,41)));
 %    Choice(data.ecodes.data(:,41)==1)=data.ecodes.data(data.ecodes.data(:,41)==1,35);
    InactiveTarg=nans(size(data.ecodes.data(:,41)));
@@ -127,6 +112,51 @@ for i=1:sum(UnbrokenTrials)
 
     end
 end
+   
+test=find(UnbrokenTrials==1);
+test2=~isnan(Choice2);
+test3=test(test2);
+temp=zeros(size(UnbrokenTrials));
+temp(test3)=1;
+UnbrokenTrials=(temp==1);
+ UnbrokenTrials_Index=find(UnbrokenTrials~=0);
+ 
+   Choice2=nans(size(data.ecodes.data(UnbrokenTrials,41)));
+  ActiveTarg=data.ecodes.data(UnbrokenTrials,35);
+  RespAng=data.ecodes.data(UnbrokenTrials, [39]);
+  Sample=data.ecodes.data(UnbrokenTrials, [38]);
+  
+     InactiveTarg=nans(size(data.ecodes.data(:,41)));
+   InactiveTarg(data.ecodes.data(:,35)==data.ecodes.data(:,36))=data.ecodes.data(data.ecodes.data(:,35)==data.ecodes.data(:,36),37);
+   InactiveTarg(data.ecodes.data(:,35)~=data.ecodes.data(:,36))=data.ecodes.data(data.ecodes.data(:,35)~=data.ecodes.data(:,36),36);
+
+  InactiveTarg=InactiveTarg(UnbrokenTrials);
+
+for i=1:sum(UnbrokenTrials)
+    if abs(degAngDiff(ActiveTarg(i),RespAng(i)))<=Cutoff
+        Choice2(i)=ActiveTarg(i);
+    elseif abs(degAngDiff(InactiveTarg(i),RespAng(i)))<=Cutoff
+            Choice2(i)=InactiveTarg(i);
+
+    end
+end
+   %Hazar Rate and Noise:
+   Haz=data.ecodes.data(UnbrokenTrials, 32);
+   Noise=data.ecodes.data(UnbrokenTrials, 33);
+   
+   
+   %LLR for T1
+   
+      T1=max([normpdf(data.ecodes.data(UnbrokenTrials,38),data.ecodes.data(UnbrokenTrials,36),Noise)';normpdf(data.ecodes.data(UnbrokenTrials,38)+360,data.ecodes.data(UnbrokenTrials,36),Noise)';normpdf(data.ecodes.data(UnbrokenTrials,38)-360,data.ecodes.data(UnbrokenTrials,36),Noise)']); 
+      T2=max([normpdf(data.ecodes.data(UnbrokenTrials,38),data.ecodes.data(UnbrokenTrials,37),Noise)';normpdf(data.ecodes.data(UnbrokenTrials,38)+360,data.ecodes.data(UnbrokenTrials,37),Noise)';normpdf(data.ecodes.data(UnbrokenTrials,38)-360,data.ecodes.data(UnbrokenTrials,37),Noise)']); 
+
+   
+   LLR=log(T1'./T2');
+   
+   %Were the choices visbible?
+   Choice_Vis=~isnan(data.ecodes.data(UnbrokenTrials,8)) & (data.ecodes.data(UnbrokenTrials,8))<(data.ecodes.data(UnbrokenTrials,9));
+   
+
 
 
   %Was the choice equal to the correct target of the previous trial?
@@ -203,7 +233,7 @@ end
       data.ecodes.data(UnbrokenTrials,[41]),...
       Choice2==data.ecodes.data(UnbrokenTrials, [35]),...
       data.ecodes.data(UnbrokenTrials, [7 9 10 12]),...
-      size(data.spikes.data,2).*ones(sum(UnbrokenTrials), 1)
+      (size(data.spikes.data,2)-1).*ones(sum(UnbrokenTrials), 1)
       %*****
 %       data.spikies.data(UnbrokenTrials,2)
 %       t12_angles, ...
@@ -219,7 +249,7 @@ end
 %       mean_visible,...
       ]);   
   if ~isempty(data.spikes.data)
-  spikies=[spikies;data.spikes.data(UnbrokenTrials,:)];
+  spikies=[spikies;data.spikes.data(UnbrokenTrials,2:end)];
   else
       spikies=[spikies;cell(sum(UnbrokenTrials),1)];
   end
@@ -228,7 +258,7 @@ end
 
 
 spikelist={};
-for i=1:size(data.spikes.data,2)
+for i=1:size(data.spikes.data,2)-1
     name=['spiketimes_',num2str(i)];
     spikelist=[spikelist,name];
 end
