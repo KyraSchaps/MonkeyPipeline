@@ -265,9 +265,7 @@ for i=1:numNeurons
     name=['spiketimes_',num2str(data.spikes.id(imptUnits(i)))];
     spikelist=[spikelist,name];
 end
-if numNeurons==0
-    spikelist={'none'};
-end
+if numNueorn
 
 
 

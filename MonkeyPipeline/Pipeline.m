@@ -16,7 +16,7 @@ mkdir(b)
 
 
 
-MemTrials=KAS_Parser_794_DelayNeural(ResponseCutoff,1,data,theFile);
+% MemTrials=KAS_Parser_794_DelayNeural(ResponseCutoff,1,data,theFile);
 numneuro=unique(MemTrials.Num_Neuron);
 
 totalFigs=1+5*numneuro;
@@ -34,7 +34,7 @@ for subset=1:3
  NumTriBreakdown{subset}=MonkeySpikeAnalysisSubset(TaskTrials,subset,(numneuro*(subset))+2+totalFigs*(currentFile-1),b);
 end
  
-[directionFits]=MonkeySpikeDirectionality(MemTrials,numneuro*(subset+1)+2+totalFigs*(currentFile-1),b)
+[directionFits,NumTri]=MonkeySpikeDirectionality(MemTrials,numneuro*(subset+1)+2+totalFigs*(currentFile-1),b)
 
 Collection{1,1}=theFile;
 Collection{1,2}=MemTrials;
@@ -45,8 +45,9 @@ Collection{1,6}=NumTriBreakdown{1};
 Collection{1,7}=NumTriBreakdown{2};
 Collection{1,8}=NumTriBreakdown{3};
 Collection{1,9}=directionFits;
+Collection{1,10}=NumTri;
 
-Collection=cell2table(Collection,'VariableNames',{'Name','Mem_Trials','Task_Trials','Psycho_fit', 'Trial_Nums','TriNum_Corr','TriNum_Switch','TriNumChoice','PrefDir_Fits'});
+Collection=cell2table(Collection,'VariableNames',{'Name','Mem_Trials','Task_Trials','Psycho_fit', 'Trial_Nums','TriNum_Corr','TriNum_Switch','TriNumChoice','PrefDir_Fits','Dir_Trials'});
 save([b,'_Parsed'],'Collection');
 cd(data_path);
 clear Collection

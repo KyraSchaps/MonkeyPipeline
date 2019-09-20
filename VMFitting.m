@@ -8,7 +8,7 @@ Ev=Ev;
 model=@fitModel;
 
 %Hrate, noise, lapse)
-lb=[0,0,0];
+lb=[0,0,3];
 p0=[sigma2kappa(15),pi/180*45,10];
 ub=[sigma2kappa(60),2*pi,70];
 

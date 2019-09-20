@@ -1,4 +1,4 @@
-function [ Fits ] = MonkeySpikeDirectionality(data, figgy,b)
+function [ Fits, NumTri ] = MonkeySpikeDirectionality(data, figgy,b)
 % reparse=1;
 % if reparse
 % ResponseCutoff=30; %(responses within this many degree of target are considered a response, rest are NaN)
@@ -69,7 +69,8 @@ end
              if sum(cell2mat(spiketimes(sessionBreakdown)))
                for Ev=1:length(Evidences)
                 TOI=find(sessionBreakdown & datahold.Sample_Angle==Evidences(Ev));
- 
+ NumTri(Ev,2)=length(TOI);
+ NumTri(Ev,1)=Evidences(Ev);
                      for trials=1:length(TOI)
                          spks=sum([spiketimes{TOI(trials)}]>starter(TOI(trials)) & [spiketimes{TOI(trials)}]<ender(TOI(trials)));
                           fr{Ev}=[fr{Ev};spks/(ender(TOI(trials))-starter(TOI(trials)))];
@@ -131,6 +132,8 @@ Fits{neuro}=y;
 
  print([b,'_neuron_', num2str(neuro), '_PETH_Directionality'],'-dpdf')
 end
+NumTri=num2cell(NumTri);
+NumTri=cell2table(NumTri, 'VariableNames', {'Direction', 'NumTrials'});
  Fits=cell2table(Fits,'VariableNames',spikelist)
 %%
 % figure
