@@ -1,6 +1,6 @@
 function [ params,err] = VMFitting( Ev,Mfr,Baseline)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+%UNTITLED2 Summary of this function goes here.
+%   Detailed explanation goes here.
 %% FITTING
 Baseline=Baseline;
 Mfr=Mfr;
